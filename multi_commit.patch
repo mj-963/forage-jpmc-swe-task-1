@@ -1,0 +1,486 @@
+From 3405277ac38fb642c8b6b2c5b0d0fb4e344f04a3 Mon Sep 17 00:00:00 2001
+From: mj-963 <mjportfoliomail@gmail.com>
+Date: Sat, 22 Jun 2024 14:44:53 +0100
+Subject: [PATCH 1/2] Fixed Errors
+
+getDataPoint function should return correct tuple of stock name, bid_price, ask_price and price. Note: price of a stock = average of bid and ask
+getRatio function should return the ratio of the two stock prices
+main function should output correct stock info, prices and ratio
+---
+ .idea/.gitignore                               |  8 ++++++++
+ .idea/forage-jpmc-swe-task-1.iml               | 14 ++++++++++++++
+ .idea/inspectionProfiles/profiles_settings.xml |  6 ++++++
+ .idea/material_theme_project_new.xml           | 10 ++++++++++
+ .idea/misc.xml                                 |  7 +++++++
+ .idea/modules.xml                              |  8 ++++++++
+ .idea/vcs.xml                                  |  6 ++++++
+ client3.py                                     | 10 +++++++---
+ 8 files changed, 66 insertions(+), 3 deletions(-)
+ create mode 100644 .idea/.gitignore
+ create mode 100644 .idea/forage-jpmc-swe-task-1.iml
+ create mode 100644 .idea/inspectionProfiles/profiles_settings.xml
+ create mode 100644 .idea/material_theme_project_new.xml
+ create mode 100644 .idea/misc.xml
+ create mode 100644 .idea/modules.xml
+ create mode 100644 .idea/vcs.xml
+
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+index 0000000..13566b8
+--- /dev/null
++++ b/.idea/.gitignore
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+diff --git a/.idea/forage-jpmc-swe-task-1.iml b/.idea/forage-jpmc-swe-task-1.iml
+new file mode 100644
+index 0000000..7a6134d
+--- /dev/null
++++ b/.idea/forage-jpmc-swe-task-1.iml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="PYTHON_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.venv" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++  <component name="PyDocumentationSettings">
++    <option name="format" value="PLAIN" />
++    <option name="myDocStringFormat" value="Plain" />
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/.idea/inspectionProfiles/profiles_settings.xml b/.idea/inspectionProfiles/profiles_settings.xml
+new file mode 100644
+index 0000000..105ce2d
+--- /dev/null
++++ b/.idea/inspectionProfiles/profiles_settings.xml
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <settings>
++    <option name="USE_PROJECT_PROFILE" value="false" />
++    <version value="1.0" />
++  </settings>
++</component>
+\ No newline at end of file
+diff --git a/.idea/material_theme_project_new.xml b/.idea/material_theme_project_new.xml
+new file mode 100644
+index 0000000..ebd5e6d
+--- /dev/null
++++ b/.idea/material_theme_project_new.xml
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="MaterialThemeProjectNewConfig">
++    <option name="metadata">
++      <MTProjectMetadataState>
++        <option name="userId" value="67db04d2:190401a9edb:-7fed" />
++      </MTProjectMetadataState>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+index 0000000..cd2d562
+--- /dev/null
++++ b/.idea/misc.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Black">
++    <option name="sdkName" value="Python 3.11 (forage-jpmc-swe-task-1)" />
++  </component>
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (forage-jpmc-swe-task-1)" project-jdk-type="Python SDK" />
++</project>
+\ No newline at end of file
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+index 0000000..973696f
+--- /dev/null
++++ b/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/forage-jpmc-swe-task-1.iml" filepath="$PROJECT_DIR$/.idea/forage-jpmc-swe-task-1.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+index 0000000..35eb1dd
+--- /dev/null
++++ b/.idea/vcs.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/client3.py b/client3.py
+index 3fc09b7..d0313d3 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,16 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price + ask_price) / 2
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+     """ ------------- Update this function ------------- """
+-    return 1
++    if price_b == 0:
++        return
++    return price_a / price_b
+ 
+ 
+ # Main
+@@ -52,8 +54,10 @@ if __name__ == "__main__":
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+         """ ----------- Update to get the ratio --------------- """
++        prices = {}
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            prices[stock] = price
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(prices['ABC'], prices['DEF']))
+-- 
+2.37.1 (Apple Git-137.1)
+
+
+From a5df70194f6d682afc79ae19dc0d58c286e6742a Mon Sep 17 00:00:00 2001
+From: mj-963 <mjportfoliomail@gmail.com>
+Date: Sat, 22 Jun 2024 15:05:14 +0100
+Subject: [PATCH 2/2] added testing
+
+Each quote represents a possible variation of
+quote data but if getDataPoint was modified properly, then it should
+return a tuple that contains (stock, top_bid_price, top_ask_price,
+stock_price_based_on_formula).
+---
+ 0001-Fixed-Errors.patch                 | 171 ++++++++++++++++++++++++
+ __pycache__/client3.cpython-311.pyc     | Bin 0 -> 1940 bytes
+ __pycache__/client_test.cpython-311.pyc | Bin 0 -> 1995 bytes
+ client_test.py                          |  36 ++---
+ 4 files changed, 192 insertions(+), 15 deletions(-)
+ create mode 100644 0001-Fixed-Errors.patch
+ create mode 100644 __pycache__/client3.cpython-311.pyc
+ create mode 100644 __pycache__/client_test.cpython-311.pyc
+
+diff --git a/0001-Fixed-Errors.patch b/0001-Fixed-Errors.patch
+new file mode 100644
+index 0000000..cfd689a
+--- /dev/null
++++ b/0001-Fixed-Errors.patch
+@@ -0,0 +1,171 @@
++From 3405277ac38fb642c8b6b2c5b0d0fb4e344f04a3 Mon Sep 17 00:00:00 2001
++From: mj-963 <mjportfoliomail@gmail.com>
++Date: Sat, 22 Jun 2024 14:44:53 +0100
++Subject: [PATCH] Fixed Errors
++
++getDataPoint function should return correct tuple of stock name, bid_price, ask_price and price. Note: price of a stock = average of bid and ask
++getRatio function should return the ratio of the two stock prices
++main function should output correct stock info, prices and ratio
++---
++ .idea/.gitignore                               |  8 ++++++++
++ .idea/forage-jpmc-swe-task-1.iml               | 14 ++++++++++++++
++ .idea/inspectionProfiles/profiles_settings.xml |  6 ++++++
++ .idea/material_theme_project_new.xml           | 10 ++++++++++
++ .idea/misc.xml                                 |  7 +++++++
++ .idea/modules.xml                              |  8 ++++++++
++ .idea/vcs.xml                                  |  6 ++++++
++ client3.py                                     | 10 +++++++---
++ 8 files changed, 66 insertions(+), 3 deletions(-)
++ create mode 100644 .idea/.gitignore
++ create mode 100644 .idea/forage-jpmc-swe-task-1.iml
++ create mode 100644 .idea/inspectionProfiles/profiles_settings.xml
++ create mode 100644 .idea/material_theme_project_new.xml
++ create mode 100644 .idea/misc.xml
++ create mode 100644 .idea/modules.xml
++ create mode 100644 .idea/vcs.xml
++
++diff --git a/.idea/.gitignore b/.idea/.gitignore
++new file mode 100644
++index 0000000..13566b8
++--- /dev/null
+++++ b/.idea/.gitignore
++@@ -0,0 +1,8 @@
+++# Default ignored files
+++/shelf/
+++/workspace.xml
+++# Editor-based HTTP Client requests
+++/httpRequests/
+++# Datasource local storage ignored files
+++/dataSources/
+++/dataSources.local.xml
++diff --git a/.idea/forage-jpmc-swe-task-1.iml b/.idea/forage-jpmc-swe-task-1.iml
++new file mode 100644
++index 0000000..7a6134d
++--- /dev/null
+++++ b/.idea/forage-jpmc-swe-task-1.iml
++@@ -0,0 +1,14 @@
+++<?xml version="1.0" encoding="UTF-8"?>
+++<module type="PYTHON_MODULE" version="4">
+++  <component name="NewModuleRootManager">
+++    <content url="file://$MODULE_DIR$">
+++      <excludeFolder url="file://$MODULE_DIR$/.venv" />
+++    </content>
+++    <orderEntry type="inheritedJdk" />
+++    <orderEntry type="sourceFolder" forTests="false" />
+++  </component>
+++  <component name="PyDocumentationSettings">
+++    <option name="format" value="PLAIN" />
+++    <option name="myDocStringFormat" value="Plain" />
+++  </component>
+++</module>
++\ No newline at end of file
++diff --git a/.idea/inspectionProfiles/profiles_settings.xml b/.idea/inspectionProfiles/profiles_settings.xml
++new file mode 100644
++index 0000000..105ce2d
++--- /dev/null
+++++ b/.idea/inspectionProfiles/profiles_settings.xml
++@@ -0,0 +1,6 @@
+++<component name="InspectionProjectProfileManager">
+++  <settings>
+++    <option name="USE_PROJECT_PROFILE" value="false" />
+++    <version value="1.0" />
+++  </settings>
+++</component>
++\ No newline at end of file
++diff --git a/.idea/material_theme_project_new.xml b/.idea/material_theme_project_new.xml
++new file mode 100644
++index 0000000..ebd5e6d
++--- /dev/null
+++++ b/.idea/material_theme_project_new.xml
++@@ -0,0 +1,10 @@
+++<?xml version="1.0" encoding="UTF-8"?>
+++<project version="4">
+++  <component name="MaterialThemeProjectNewConfig">
+++    <option name="metadata">
+++      <MTProjectMetadataState>
+++        <option name="userId" value="67db04d2:190401a9edb:-7fed" />
+++      </MTProjectMetadataState>
+++    </option>
+++  </component>
+++</project>
++\ No newline at end of file
++diff --git a/.idea/misc.xml b/.idea/misc.xml
++new file mode 100644
++index 0000000..cd2d562
++--- /dev/null
+++++ b/.idea/misc.xml
++@@ -0,0 +1,7 @@
+++<?xml version="1.0" encoding="UTF-8"?>
+++<project version="4">
+++  <component name="Black">
+++    <option name="sdkName" value="Python 3.11 (forage-jpmc-swe-task-1)" />
+++  </component>
+++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (forage-jpmc-swe-task-1)" project-jdk-type="Python SDK" />
+++</project>
++\ No newline at end of file
++diff --git a/.idea/modules.xml b/.idea/modules.xml
++new file mode 100644
++index 0000000..973696f
++--- /dev/null
+++++ b/.idea/modules.xml
++@@ -0,0 +1,8 @@
+++<?xml version="1.0" encoding="UTF-8"?>
+++<project version="4">
+++  <component name="ProjectModuleManager">
+++    <modules>
+++      <module fileurl="file://$PROJECT_DIR$/.idea/forage-jpmc-swe-task-1.iml" filepath="$PROJECT_DIR$/.idea/forage-jpmc-swe-task-1.iml" />
+++    </modules>
+++  </component>
+++</project>
++\ No newline at end of file
++diff --git a/.idea/vcs.xml b/.idea/vcs.xml
++new file mode 100644
++index 0000000..35eb1dd
++--- /dev/null
+++++ b/.idea/vcs.xml
++@@ -0,0 +1,6 @@
+++<?xml version="1.0" encoding="UTF-8"?>
+++<project version="4">
+++  <component name="VcsDirectoryMappings">
+++    <mapping directory="" vcs="Git" />
+++  </component>
+++</project>
++\ No newline at end of file
++diff --git a/client3.py b/client3.py
++index 3fc09b7..d0313d3 100644
++--- a/client3.py
+++++ b/client3.py
++@@ -35,14 +35,16 @@ def getDataPoint(quote):
++     stock = quote['stock']
++     bid_price = float(quote['top_bid']['price'])
++     ask_price = float(quote['top_ask']['price'])
++-    price = bid_price
+++    price = (bid_price + ask_price) / 2
++     return stock, bid_price, ask_price, price
++ 
++ 
++ def getRatio(price_a, price_b):
++     """ Get ratio of price_a and price_b """
++     """ ------------- Update this function ------------- """
++-    return 1
+++    if price_b == 0:
+++        return
+++    return price_a / price_b
++ 
++ 
++ # Main
++@@ -52,8 +54,10 @@ if __name__ == "__main__":
++         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
++ 
++         """ ----------- Update to get the ratio --------------- """
+++        prices = {}
++         for quote in quotes:
++             stock, bid_price, ask_price, price = getDataPoint(quote)
+++            prices[stock] = price
++             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
++ 
++-        print("Ratio %s" % getRatio(price, price))
+++        print("Ratio %s" % getRatio(prices['ABC'], prices['DEF']))
++-- 
++2.37.1 (Apple Git-137.1)
++
+diff --git a/__pycache__/client3.cpython-311.pyc b/__pycache__/client3.cpython-311.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..1f3cd0181ed481d5208d40c3ce20c40767c5b10b
+GIT binary patch
+literal 1940
+zcmaJ>O>7fK6rS<^*pBTa4oPT;TP;W_n36aF(WX&o6^KJQ5G7E4vZ7cU&m^p4d(G||
+zgzHFF)q{~ZxDpkX+DbW8l!^<gs=|><T-uWtS;ZQuQly@^S)wOSeY1|^1gY%IynS!x
+z%{T9F=BH4o3&HnC{l?0-euVzvLi-DCF|Yo@2;D;j5u8S9>yK6J${tl99#tfQDiQH(
+zq{>7B>ZLv+uX*@>^G^?=ei&U;x(_%HVYI&8(k%Mou^Iq9lnS;rsE}&gfHu0@vpfG(
+z-00aUw|T(9sm@6-{jj}+cAvXj+UVU@+riv_%YHTNM><mbXc#<*se9mLneN$*dPPJ?
+z?N<lXL3J<POZ#a5G$4ZJJH$)-zr(~w2Y~wNAkZ$l7ii!I|85M7?u@%Tf<V2rkA#M{
+zEd;5%Bi)C%KXhZy6$&zX!(%}Djo|Z;&GRVQ^O7sg7xrJX?c7u>mNt@F`kG<cQ<LM9
+z<FV^`YTo)(CnvsK*Z+lhCbwe>yTB_Xz<BjNkbB6Fih$X%V;$Q&v|-KDStCM+-|gqR
+z=Z#%rNAoSagrcV?6u=H56#@vYi$%<5isFh0Udn}!lm*iu`6N}ebXu{mQ6)<$p+vc%
+zrSsHMY(rV4S!!xFXedOpwVa`6ZG}meZ6w#2*EVvAWt}i7XX;7Xk~M4XB@c8IGifDl
+zXm(U$()GMyQ<KMr`C&t%rSAvb7HdL6kR<_8`1g7)cEO^i70aYzvqmzXp;_CCo!0Ho
+z^2@PHhPif*<_s&gVwl=09Zlsj$x-Vj9kl^(bRw2a>!5#ZEO(0qSE)S<b}w+dO@3Px
+zevk^Jgf_+LMlf7CcxS#8|GRgfLaS%$gYR$LtPjSV-tl_xc<IdlOgBP<)gdQzU_*0)
+z2TSorptlmOE<KQHfzg^c`U=oda=X|-;JjND?*Zc$1txgwDew@_c_@-1<|%@-2!#X6
+zX=*DFb=^>m6~&EJLQ}LX+2WTKlOxXmjG`Xq-CA!m%NAc#6qCOa%m)ED$C1o_5D&w!
+zxD74mz1@}lUlmKmhOfIUHv)Z?OHLqC6C);nKA10&$Y^>tktlc<dHRS_@GF|F9D)Q+
+z733odM0={>JJK?0>NSoQeC|=oh{c4Nlc$(48=s2~F)?KsStgs{fRSO{c{82Xm&Z&B
+z_sFuD+>)8Jcp-jniQ#!SO|H4zgshgKi3AgMs2?T)#wukv!6c|GVli(U#S17#j>0ie
+z6dBECqDeKvWVi4vCc8nhO#ZIBWoSaMk;xxbxAfc!h6)Mu3GTfcz1P0!4BU@2{lxqL
+z=J>_6vOt>x#<+PH;b1AiTLXnkZfl@{TDv!8<Udl9;3xS?xG8(_SQBlNehI(ZMBAhf
+ziNSK=xiC}{hBiat^5>P2%19M|bLj4&+gI;gZK5ve6mHQnZiI&`{df0O=f0nR5jpxi
+za`e&h$J4(|KMg&VpM`$!dDi0`Tc{sfa3YKK$l{C0#pjWWPULbua@h$l)x%3=dDC~Q
+z5#9qS9~f>T!A}60({j8qapF<r33VoB>l3q1aI74!d|cHZ3^XG9%X5|Ex6i_TDaXt4
+zCwbnU>b%t!)vbO-tF?OHvJ*_!gUOoPH+`Y9R8CbVtCJgZ503wM_R)t=Mt(iv4A0bu
+dXPoXC$9J;sJ6Uska|nt1AO=mb<FK2L{{Ws};@toM
+
+literal 0
+HcmV?d00001
+
+diff --git a/__pycache__/client_test.cpython-311.pyc b/__pycache__/client_test.cpython-311.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..b90ff11db77426f53418af9f0fe095082f6d7b4d
+GIT binary patch
+literal 1995
+zcmcgtO-vhC5PtjTKTP<^pCORAv}tQq#y=R4QHuC2s49dM(zI@1v+-NN*lU~Jbx<uL
+zQHe+#dgv{eRLY4KAypiDptl@*NTnsRRCiCQdO)Z>I3g!5?aUf%2!|*=^zH8FnKv_U
+z=Dqg~d|zAZA~1gb{od?90wI5*ax_4<#(o-p9ui6@lOi$vWmAm8##n~1WQ0&|l~7(L
+z3*4bUSqEveqQ!VwphA*GtJ=U4@U&GtLD)P}2m=`=t<PuM!`X2kW4h;LeMr)!iA*A`
+z$1A=dFo(*1GYAi1-55hjjHS#fiE)$#<S92ve7xxzOeN&BJ|$~<{3r^8?eJlp`@I0L
+zLx!@Hd&E+n3e;vvcIu$cM*?-xnnR15)*f2Upk<D|4_P5g-T2(EPhosA)3^5yEVsd$
+zLRL-0Ws}zudHJ9@91KPM!LUCR@`l4b!LFW;V0&kGIMUg%d*#7jH?}WBpaOvhXM*ja
+zU^Lnt>56uDcZW=_e_(J!FztFKD@t0@bm|EOb|NX+^4#47HCgxsP0z%WyMMz{50bDL
+z4~y-N{*gcT<I;5B-VM-9ZfN+U4dP>=COI{0+7@#eUDh<b8?X1^<G@W#R<(e#5E#nD
+za|#@p78ptBqq)0*TNyR^shrJdf!T~I&B^|StP=NYOR`^wn*5<a+&W?rmebp_UzuJM
+z#N&4-#-&s|my&dO0*@vCLG@DFU+0X3(dGeG$n&=Mwi*pj1m8ii*!KR`+lHqL-`;WK
+zi<uI~)ZSrA1o1f--#X#iW_UXB{cz0qd>UOv%N5WrG`iMoB{y*nFovUlA99fsT){rE
+zxKa-c`tMwEl4WLyOw0G#W%3x4oEmzia|l^x*CE?xg|o{nt!t`8fL34CXhT&7OJh}g
+z#q!26dB{l5=4%L<<=25Ln^rGl84USm)?)v;L-s$N?o+X=R0je?5Y>%Pi*N>^4xt|5
+z0>VWE4+7S!Vk@iX5zZnw5gGvYFeUJ|M$&+y`tV{-N~w5IK2B{xr&a({DDxTTy<V?+
+z8RtT;<JLfej;J!wQk|NY(*0U8f9(yJc`6$BryT(NFH|j_zf>Zua}j8axHepL*Z<~j
+zdFF2U?)DE?cUpsm*5Fp>_QjuipLG7xR2ZBzroJo;-Zp0922~0(X(My5Ftb#QM7Mo~
+z$k3Bpg~*sOantxrEKJ-nr1`=`VkeR?l=MzV8rr2J%e;WjT4Y{Yh+T%6E##_Is9xCq
+zxKA)0qL`KxSrko|C@LA6OQGx*MZCVUMZE&P>Q#hG2wnudI2Hf>Sb&1o1+Y?iN~~QN
+zfXv6R(IsFl$IwHB9)pjTm&8S|9z{x|MbT$B9l3NuM{bz*@}I5_i%+Iw3g!kSV3}3G
+zyBNn~)GPHJIIfj<)T_3G54NbL0l+aaOp(;BSWl67jgxQ5c7f?Bk<;+4r_j*$0u3*#
+l)-d7SYx!qflfg9=`G%Fz)v>RyuU=oVo)Sm+W-wSg{1+vm0>%IU
+
+literal 0
+HcmV?d00001
+
+diff --git a/client_test.py b/client_test.py
+index af2bf26..e216df4 100644
+--- a/client_test.py
++++ b/client_test.py
+@@ -1,24 +1,30 @@
+ import unittest
+ from client3 import getDataPoint
+ 
+-class ClientTest(unittest.TestCase):
+-  def test_getDataPoint_calculatePrice(self):
+-    quotes = [
+-      {'top_ask': {'price': 121.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
+-      {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+-    ]
+-    """ ------------ Add the assertion below ------------ """
+-
+-  def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
+-    quotes = [
+-      {'top_ask': {'price': 119.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
+-      {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+-    ]
+-    """ ------------ Add the assertion below ------------ """
+ 
++class ClientTest(unittest.TestCase):
++    def test_getDataPoint_calculatePrice(self):
++        quotes = [
++            {'top_ask': {'price': 121.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453',
++             'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
++            {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453',
++             'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
++        ]
++        """ ------------ Add the assertion below ------------ """
+ 
+-  """ ------------ Add more unit tests ------------ """
++    def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
++        quotes = [
++            {'top_ask': {'price': 119.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453',
++             'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
++            {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453',
++             'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
++        ]
++        """ ------------ Add the assertion below ------------ """
++        for quote in quotes:
++            self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'],
++                                                   (quote['top_bid']['price'] + quote['top_ask']['price']) / 2))
+ 
++    """ ------------ Add more unit tests ------------ """
+ 
+ 
+ if __name__ == '__main__':
+-- 
+2.37.1 (Apple Git-137.1)
+
